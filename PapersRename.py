@@ -86,3 +86,99 @@ print t.contents
 import urllib.request    
 urllib.request.urlretrieve(url, "test.txt")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+from newspaper import Article
+from newspaper3k import Article
+
+article = Article(url)
+article.download()
+article.parse()
+article.text
+
+
+
+import pandas as pd
+
+http = r'https://www.ibm.com/docs/en/cmofz/10.1.0?topic=SSQHWE_10.1.0/com.ibm.ondemand.mp.doc/arsa0257.htm'
+table = pd.read_html(url)
+
+
+
+
+
+
+
+from lxml import html
+import requests
+
+page = requests.get(url)
+tree = html.fromstring(page.content)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import subprocess
+
+res = subprocess.call("Rscript /Users/dradecic/Desktop/script.R", shell=True)
+res
+
+
+
+from rpy2 import robjects
+
+pi = robjects.r['pi']
+pi
+
+
+robjects.r('''
+    add_nums <- function(x, y) {
+        return(x + y)
+    }
+    
+    print(add_nums(x = 5, y = 10))
+    print(add_nums(x = 10, y = 20))
+''')
+
+
+import rpy2.robjects.packages as rpackages
+
+
+utils = rpackages.importr('utils')
+utils.chooseCRANmirror(ind=1)
+
+utils.install_packages('<package_name>')
+
+
+from rpy2.robjects.packages import importr, data
+
+datasets = importr('datasets')
+mtcars = data(datasets).fetch('mtcars')['mtcars']
+mtcars
