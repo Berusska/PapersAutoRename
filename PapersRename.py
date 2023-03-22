@@ -63,7 +63,26 @@ web.hostname
 
 
 
+from pathlib import Path
+
+
+primSlozka = Path.cwd()
+sekSlozka = Path("./downloaded")
+sekSlozka.mkdir(parents=True, exist_ok=True)
+
+with open("querys.txt", "r", encoding="utf-8") as f:
+    querys = f.read().splitlines()
+
+print("zadaných querys bylo: ", len(querys))
+
+
 def downloadPDF():
+    ...
+
+def getTitle():
+    ...
+    
+def Rename():
     ...
 
 
@@ -74,13 +93,12 @@ def userIO():
         print("Uživatelem vyžádaný konec programu")
         sg.popup_auto_close("KONEC PROGRAMU.", background_color="darkgreen" ,auto_close_duration=1, keep_on_top=True, )
         pyautogui.click(100, 200) #na zavření tabu
-        pyautogui.hotkey('ctrl', 'w')                 
-        break
+        pyautogui.hotkey('ctrl', 'w')  
+        return 0               
     elif klavesa == "f9": #PRO 
         pyautogui.hotkey('f6')
         pyautogui.hotkey('ctrl', 'c')    
-        schranka = pc.paste()
-        return 1
+        
     elif klavesa == "f8": 
         pyautogui.hotkey('f6')
         pyautogui.hotkey('ctrl', 'c')    
@@ -94,25 +112,23 @@ def userIO():
             predtim = schranka
             indikace_schranky = 1 
 
+    nazev = getTitle()
+    web = ...
+    if web in ["link.springer.com", "www.researchgate.net", ...]:
+        downloadPDF()
+        
+    if novyFile():
+        Rename()
+
     
-def getTitle():
-    ...
+
+
+
+def main():
+    while True:
+        output = userIO()
+        if output == 0:
+            break
     
-def Rename():
-    ...
-
-
-
-while True:
-    if userID() == 0:
-        break
-    else:
-        nazev = getTitle()
-        web = ...
-        if web in ["link.springer.com", "www.researchgate.net", ...]:
-            downloadPDF()
-            
-        if novyFile:
-            Rename()
         
         
