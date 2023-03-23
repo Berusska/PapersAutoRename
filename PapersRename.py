@@ -21,8 +21,16 @@ import time
 import keyboard
 import PySimpleGUI as sg
 import pyautogui
+import re
 
+primSlozka = Path.cwd()
+sekSlozka = Path("./downloaded")
+sekSlozka.mkdir(parents=True, exist_ok=True)
 
+veSlozce = set(sorted(primSlozka.glob("*.pdf"))) 
+
+with open("querys.txt", "r", encoding="utf-8") as f:
+    urls = f.read().splitlines()
 
 def downloadOpenPDF():
     pyautogui.click(0, 200)
@@ -34,10 +42,10 @@ def downloadOpenPDF():
 
 
 def downloadSciencePDF():
-    ...
+    ...  #TODO: zatím nechat
 
 def getTitle():
-    pyautogui.hotkey('ctrl', 'u') # TODO: pak url =  view-source:https://link.springer.com/article/10.1007/s00204-016-1827-3
+    pyautogui.hotkey('ctrl', 'u') # pak lze url =  view-source:https://link.springer.com/article/10.1007/s00204-016-1827-3
     time.sleep(0.5) 
     pyautogui.hotkey('ctrl', 'a')  
     pyautogui.hotkey('ctrl', 'c')  
@@ -49,11 +57,32 @@ def getTitle():
     Titul = tag.text()
     return Titul
     
-def FileOccured():
-    ...
+def FileOccured(veSlozce: any):
+    veSlozce_actual = set(sorted(primSlozka.glob("*.pdf")))
+    newFile = veSlozce.symmetric_difference(veSlozce_actual)
+    if len(newFile) != 0:
+        cestaFile = list(newFile)[0]
+        print(f"\t{cestaFile.name}")
+        return (True, cestaFile, veSlozce_actual)
+    else: 
+        return (False, None)
     
-def Rename():
-    ...
+def Rename(cestaFile: Path, titul: str):
+    nazevPresunu = re.sub("[:!?*;°/\\\\]","_", titul)
+    print(f"\t{nazevPresunu}")
+    celaCesta = str(sekSlozka.absolute()) + "/" + nazevPresunu + cestaFile.name
+    if len(celaCesta) >150:
+        celaCesta = celaCesta[0:150] + ".pdf"
+        
+    try:
+        cestaFile.rename(celaCesta)
+        print("\tPokus souboru o přejmenování.")
+        if Path(celaCesta).exists():
+            print("\tSoubor byl přesunut.")
+        else: print("CHYBA !!!")
+        indikace_schranky = 0
+    except:
+        FileExistsError
 
 
 def userIO():
@@ -66,7 +95,7 @@ def userIO():
         sg.popup_auto_close("KONEC PROGRAMU.", background_color="darkgreen" ,auto_close_duration=1, keep_on_top=True, )
         pyautogui.click(100, 200) #na zavření tabu
         pyautogui.hotkey('ctrl', 'w')  
-        return 0               
+        return 0  #vede ke konci programu              
     elif klavesa == "f9": #PRO ELSEVIER ETC.
         pyautogui.hotkey('f6')
         pyautogui.hotkey('ctrl', 'c')    
@@ -77,11 +106,15 @@ def userIO():
         
         name = getTitle()
         
-        if FileOccured():
-            Rename(name)
-        
-        
-        return "continue"
+        while True:
+            newFile = FileOccured(veSlozce = veSlozce)
+            
+            if newFile[0]:
+                veSlozce = newFile[2]
+                Rename(newFile[1], name)
+                break
+                    
+        return "continue" # vede k pokračování programu
         
     elif klavesa == "f8": #pro další bezejmenná otevřená pdf
         pyautogui.hotkey('f6')
@@ -112,19 +145,11 @@ def userIO():
 
 
 def main():
-    primSlozka = Path.cwd()
-    sekSlozka = Path("./downloaded")
-    sekSlozka.mkdir(parents=True, exist_ok=True)
-
-    veSlozce = set(sorted(primSlozka.glob("*.pdf"))) 
-
-    with open("querys.txt", "r", encoding="utf-8") as f:
-        urls = f.read().splitlines()
-    
     while True:
         output = userIO()
         if output == 0:
             break
     
         
-        
+if __name__ == "__main__":
+    main()
