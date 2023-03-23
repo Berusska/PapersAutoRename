@@ -66,20 +66,22 @@ web.hostname
 from pathlib import Path
 
 
-primSlozka = Path.cwd()
-sekSlozka = Path("./downloaded")
-sekSlozka.mkdir(parents=True, exist_ok=True)
+def downloadOpenPDF():
+    pyautogui.click(0, 200)
+    pyautogui.hotkey('ctrl', 's')#takže by mělo stačit jen zkopírovat F6; Ctrl + C 
+    pyautogui.click(100, 200) # stahovací okno musí mít určitou pozici
+    pyautogui.hotkey("enter") #na zavření dialogi stahování
+    pyautogui.click(100, 200) # AKTIVACE TABU
+    pyautogui.hotkey("ctrl", "w") #zavření tabu
 
-with open("querys.txt", "r", encoding="utf-8") as f:
-    querys = f.read().splitlines()
 
-print("zadaných querys bylo: ", len(querys))
-
-
-def downloadPDF():
+def downloadSciencePDF():
     ...
 
 def getTitle():
+    ...
+    
+def FileOccured():
     ...
     
 def Rename():
@@ -87,6 +89,8 @@ def Rename():
 
 
 def userIO():
+    pc.copy("0"); predtim = "0"
+
     klavesa = keyboard.read_key()
     
     if klavesa == "esc":
@@ -95,36 +99,60 @@ def userIO():
         pyautogui.click(100, 200) #na zavření tabu
         pyautogui.hotkey('ctrl', 'w')  
         return 0               
-    elif klavesa == "f9": #PRO 
+    elif klavesa == "f9": #PRO ELSEVIER ETC.
         pyautogui.hotkey('f6')
         pyautogui.hotkey('ctrl', 'c')    
+        schranka = pc.paste()
         
-    elif klavesa == "f8": 
+        # downloadSciencePDF() 
+        #TODO: tady to stahování zatím nech být - bude to možná komplikovaný, zajisti jen to přejmenování
+        
+        name = getTitle()
+        
+        if FileOccured():
+            Rename(name)
+        
+        
+        return "continue"
+        
+    elif klavesa == "f8": #pro další bezejmenná otevřená pdf
         pyautogui.hotkey('f6')
         pyautogui.hotkey('ctrl', 'c')    
         schranka = pc.paste()
     
         if predtim != schranka:
-            pyautogui.click(0, 200)
-            pyautogui.hotkey('ctrl', 's')#takže by mělo stačit jen zkopírovat F6; Ctrl + C 
-            pyautogui.click(100, 200) # stahovací okno musí mít určitou pozici
-            pyautogui.hotkey("enter") #na zavření dialogi stahování
+            downloadOpenPDF()
             predtim = schranka
-            indikace_schranky = 1 
-
-    nazev = getTitle()
-    web = ...
-    if web in ["link.springer.com", "www.researchgate.net", ...]:
-        downloadPDF()
+            
+            return "continue"
         
-    if novyFile():
-        Rename()
+    elif klavesa == "f6": #pro již stažená (nepohlídané vědecké portály)
+        pyautogui.hotkey('ctrl', 'c')    
+        schranka = pc.paste()
+    else: pass #není zmážknuta klávesa, nebo je jiná od definovaných
+
+    # nazev = getTitle()
+    # web = ...
+    # if web in ["link.springer.com", "www.researchgate.net", ...]:
+    #     # downloadPDF()
+        
+    # if novyFile():
+    #     Rename()
 
     
 
 
 
 def main():
+    primSlozka = Path.cwd()
+    sekSlozka = Path("./downloaded")
+    sekSlozka.mkdir(parents=True, exist_ok=True)
+
+    veSlozce = set(sorted(primSlozka.glob("*.pdf"))) 
+
+    with open("querys.txt", "r", encoding="utf-8") as f:
+        urls = f.read().splitlines()
+    
     while True:
         output = userIO()
         if output == 0:
