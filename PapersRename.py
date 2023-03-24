@@ -81,6 +81,11 @@ def Rename(cestaFile: Path, titul: str):
     except:
         FileExistsError
 
+def hlaseniKonce():
+    layout = [[sg.Text(text='Byla stisknuta klávesa Esc.\n\nProgram byl ukončen uživatelem.', font=('Arial Bold', 20), background_color="indigo")]]
+    hlaseni = sg.Window("Konec programu.", layout,auto_close_duration=1, keep_on_top=True, size=(715,250), finalize=True, auto_close=True, background_color="indigo")
+
+    hlaseni.read()
 
 def userIO():
     pc.copy("0"); predtim = "0"
@@ -89,15 +94,7 @@ def userIO():
     
     if klavesa == "esc":
         print("Uživatelem vyžádaný konec programu")
-        layout = [[sg.Text(text='Byla stisknuta klávesa Esc.\nProgram byl ukončen uživatelem.', font=('Arial Bold', 20), size=20, background_color="darkgreen")],
-]
-        hlaseni = sg.Window("Konec programu.", layout,auto_close_duration=5, keep_on_top=True, size=(715,250))
-        while True:
-            event, values = hlaseni.read()
-            if event in (None, 'Exit'):
-                break
-        hlaseni.close()
-        
+        hlaseniKonce()
         pyautogui.click(100, 200) #na zavření tabu
         pyautogui.hotkey('ctrl', 'w')  
         return (0, None, None)  #vede ke konci programu              
