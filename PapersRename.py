@@ -89,7 +89,15 @@ def userIO():
     
     if klavesa == "esc":
         print("Uživatelem vyžádaný konec programu")
-        sg.popup_auto_close("KONEC PROGRAMU.", background_color="darkgreen" ,auto_close_duration=1, keep_on_top=True, )
+        layout = [[sg.Text(text='Byla stisknuta klávesa Esc.\nProgram byl ukončen uživatelem.', font=('Arial Bold', 20), size=20, background_color="darkgreen")],
+]
+        hlaseni = sg.Window("Konec programu.", layout,auto_close_duration=5, keep_on_top=True, size=(715,250))
+        while True:
+            event, values = hlaseni.read()
+            if event in (None, 'Exit'):
+                break
+        hlaseni.close()
+        
         pyautogui.click(100, 200) #na zavření tabu
         pyautogui.hotkey('ctrl', 'w')  
         return (0, None, None)  #vede ke konci programu              
