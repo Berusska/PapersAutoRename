@@ -1,15 +1,9 @@
 
-# # https://www.sciencedirect.com/science/article/abs/pii/S1359511308001876
+# https://www.sciencedirect.com/science/article/abs/pii/S1359511308001876
 # url = "https://www.sciencedirect.com/science/article/abs/pii/S1359511308001876"
+# https://link.springer.com/article/10.1007/s00204-016-1827-3
+# https://www.researchgate.net/publication/11211492_Influence_of_the_drying_technique_on_theophylline_pellets_prepared_by_extrusion-spheronization
 
-
-
-# from urllib.parse import urlparse
-# web = urlparse("https://link.springer.com/article/10.1007/s00204-016-1827-3")
-# web = urlparse("https://www.researchgate.net/publication/11211492_Influence_of_the_drying_technique_on_theophylline_pellets_prepared_by_extrusion-spheronization")
-# web.scheme
-# web.netloc #
-# web.hostname
 
 from pathlib import Path
 from pyquery import PyQuery 
@@ -19,6 +13,9 @@ import keyboard
 import PySimpleGUI as sg
 import pyautogui
 import re
+import textwrap
+from urllib.parse import urlparse
+
 
 import colorama
 
@@ -87,22 +84,40 @@ def hlaseniKonce():
 
     hlaseni.read()
     
-def hlaseniSouboru():
-    # cestaFile = list(newFile)[0]
-    # print(f"\t{cestaFile.name}")
-    # schrana = textwrap.fill(schranka, 70).replace("\n", "\n\t")
-    # quer = textwrap.fill(query, 70).replace("\n", "\n\t")
+def hlaseniSouboru(newFile: Path, schranka: str, titul: str):
+    cestaFile = list(newFile)[0]
+    print(f"\t{cestaFile.name}")
+    schrana = textwrap.fill(schranka, 70).replace("\n", "\n\t")
 
-    # layout = [[sg.Text(f"Ve schránce nová url adresa a zároveň se objevil nový PDF soubor v primární složce.\n\tAktuální požadavek: {quer}\n\n\tNový soubor: {cestaFile.name}\n\n\tAktuální schránka: {schrana}\n")],[[sg.Button('Jiný zajimavý zdroj', size = (15, 2), pad=((15,20),20)), sg.Button('Daný zdroj', size = (15, 2), pad=((15,20),20)), sg.Button("Daný zdroj\nDej další zdroj", size = (15, 2), pad=((15,20),20),button_color="red"), sg.Button("Jiný zajímavý zdroj\nDej další zdroj", size = (15, 2), pad=((15,20),20), button_color="purple")]]]
+    layout = [[sg.Text(f"Ve schránce je nová url adresa a zároveň se objevil nový PDF soubor v primární složce.\n\n\tNový soubor: {cestaFile.name}\n\n\tObsah schránka: {schrana}\n")],
+              [[sg.Button('V pořádku', size = (15, 2), pad=((15,20),20), button_color="green"), sg.Button('Špatně\nUprava uživatelem', size = (15, 2), pad=((15,20),20), button_color="red")]]]
     
     # schranka = pc.paste() #joko možnost opravy v průběhu
     
-    event, other = sg.Window('Stahování zdrojů pro DP', layout, keep_on_top=True).read(close=True) 
+    schvaleni, other = sg.Window('Stahování zdrojů pro DP', layout, keep_on_top=True, size=(715,250), finalize=True, auto_close=True, background_color="indigo").read(close=True) 
     
-    layout = [[sg.Text(text='Byla stisknuta klávesa Esc.\n\nProgram byl ukončen uživatelem.', font=('Arial Bold', 20), background_color="indigo")]]
-    hlaseni = sg.Window("Konec programu.", layout,auto_close_duration=1, keep_on_top=True, size=(715,250), finalize=True, auto_close=True, background_color="indigo")
+    if schvaleni == 'Stahování zdrojů pro DP':
+        return True
+    else: 
+        return False
 
-    hlaseni.read()
+def UpravaUzivatelem():
+    print("Uprava uživatelem zatím není podporovaná.")
+    ... #TODO:
+    
+    
+def SciencePortal(urlAdresa: str):
+    web = urlparse(urlAdresa)
+    domena = web.scheme
+    
+    # web.netloc 
+    # web.hostname
+    
+    if domena in ["https://link.springer.com", "https://www.sciencedirect.com", "https://www.researchgate.net"]:
+        return True
+    else:
+        return False
+
 
 def userIO():
     pc.copy("0"); predtim = "0"
@@ -115,7 +130,7 @@ def userIO():
         pyautogui.click(100, 200) #na zavření tabu
         pyautogui.hotkey('ctrl', 'w')  
         return (0, None, None)  #vede ke konci programu              
-    elif klavesa == "f9": #PRO ELSEVIER ETC. #TODO: místo uživatelsky volenou klávesou by se mohla název stránky: jestli bude náležet do množiny, pak to pojede podle následujícího kódu
+    elif klavesa == "f9": #PRO ELSEVIER ETC. #TODO: místo uživatelsky volenou klávesou by se mohla název stránky: jestli bude náležet do množiny, pak to pojede podle následujícího kódu -> -> -> fce SciencePortal()
         print("\tStisknuta F9")
         pyautogui.click(100, 200)
         pyautogui.hotkey('f6')
@@ -135,7 +150,13 @@ def userIO():
             if newFile[0]:
                 # veSlozce = newFile[2]
                 print("\tNalezen nový soubor: " + str(newFile[1]))
-                Rename(newFile[1], name)
+                schvaleni = hlaseniSouboru(newFile = newFile, schranka = schranka, titul=name)
+                
+                if schvaleni:
+                    Rename(newFile[1], name)
+                else:
+                    UpravaUzivatelem()
+                                
                 break
                     
         return ("continue", newFile[2] )# vede k pokračování programu
