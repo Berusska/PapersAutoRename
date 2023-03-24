@@ -92,8 +92,8 @@ def userIO():
         sg.popup_auto_close("KONEC PROGRAMU.", background_color="darkgreen" ,auto_close_duration=1, keep_on_top=True, )
         pyautogui.click(100, 200) #na zavření tabu
         pyautogui.hotkey('ctrl', 'w')  
-        return 0  #vede ke konci programu              
-    elif klavesa == "f9": #PRO ELSEVIER ETC.
+        return (0, None, None)  #vede ke konci programu              
+    elif klavesa == "f9": #PRO ELSEVIER ETC. #TODO: místo uživatelsky volenou klávesou by se mohla název stránky: jestli bude náležet do množiny, pak to pojede podle následujícího kódu
         print("\tStisknuta F9")
         pyautogui.click(100, 200)
         pyautogui.hotkey('f6')
@@ -136,29 +136,18 @@ def userIO():
 
     
     #TODO: zajistit průběžný záznam práce do urls.txt
-    # nazev = getTitle()
-    # web = ...
-    # if web in ["link.springer.com", "www.researchgate.net", ...]:
-    #     # downloadPDF()
-        
-    # if novyFile():
-    #     Rename()
-
-    
-
 
 
 def main():
     print("\033[91m" + "Skript byl spuštěn." + "\033[0m")
     while True:
         output = userIO()
-        print(output)
         if output[0] == 0:
             break
         else:
             veSlozce = output[1]
     
-    print("\tVystoupení z while-loopu. Konec programu")
+    print("Vystoupení z while-loopu. Konec programu")
     
         
 if __name__ == "__main__":
