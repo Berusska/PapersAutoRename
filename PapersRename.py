@@ -86,6 +86,23 @@ def hlaseniKonce():
     hlaseni = sg.Window("Konec programu.", layout,auto_close_duration=1, keep_on_top=True, size=(715,250), finalize=True, auto_close=True, background_color="indigo")
 
     hlaseni.read()
+    
+def hlaseniSouboru():
+    # cestaFile = list(newFile)[0]
+    # print(f"\t{cestaFile.name}")
+    # schrana = textwrap.fill(schranka, 70).replace("\n", "\n\t")
+    # quer = textwrap.fill(query, 70).replace("\n", "\n\t")
+
+    # layout = [[sg.Text(f"Ve schránce nová url adresa a zároveň se objevil nový PDF soubor v primární složce.\n\tAktuální požadavek: {quer}\n\n\tNový soubor: {cestaFile.name}\n\n\tAktuální schránka: {schrana}\n")],[[sg.Button('Jiný zajimavý zdroj', size = (15, 2), pad=((15,20),20)), sg.Button('Daný zdroj', size = (15, 2), pad=((15,20),20)), sg.Button("Daný zdroj\nDej další zdroj", size = (15, 2), pad=((15,20),20),button_color="red"), sg.Button("Jiný zajímavý zdroj\nDej další zdroj", size = (15, 2), pad=((15,20),20), button_color="purple")]]]
+    
+    # schranka = pc.paste() #joko možnost opravy v průběhu
+    
+    event, other = sg.Window('Stahování zdrojů pro DP', layout, keep_on_top=True).read(close=True) 
+    
+    layout = [[sg.Text(text='Byla stisknuta klávesa Esc.\n\nProgram byl ukončen uživatelem.', font=('Arial Bold', 20), background_color="indigo")]]
+    hlaseni = sg.Window("Konec programu.", layout,auto_close_duration=1, keep_on_top=True, size=(715,250), finalize=True, auto_close=True, background_color="indigo")
+
+    hlaseni.read()
 
 def userIO():
     pc.copy("0"); predtim = "0"
