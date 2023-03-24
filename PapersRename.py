@@ -1,18 +1,15 @@
 
-# https://www.sciencedirect.com/science/article/abs/pii/S1359511308001876
-url = "https://www.sciencedirect.com/science/article/abs/pii/S1359511308001876"
+# # https://www.sciencedirect.com/science/article/abs/pii/S1359511308001876
+# url = "https://www.sciencedirect.com/science/article/abs/pii/S1359511308001876"
 
 
 
-from urllib.parse import urlparse
-web = urlparse("https://link.springer.com/article/10.1007/s00204-016-1827-3")
-web = urlparse("https://www.researchgate.net/publication/11211492_Influence_of_the_drying_technique_on_theophylline_pellets_prepared_by_extrusion-spheronization")
-web.scheme
-web.netloc #
-web.hostname
-
-
-
+# from urllib.parse import urlparse
+# web = urlparse("https://link.springer.com/article/10.1007/s00204-016-1827-3")
+# web = urlparse("https://www.researchgate.net/publication/11211492_Influence_of_the_drying_technique_on_theophylline_pellets_prepared_by_extrusion-spheronization")
+# web.scheme
+# web.netloc #
+# web.hostname
 
 from pathlib import Path
 from pyquery import PyQuery 
@@ -23,11 +20,8 @@ import PySimpleGUI as sg
 import pyautogui
 import re
 
-primSlozka = Path.cwd()
-sekSlozka = Path("./downloaded")
-sekSlozka.mkdir(parents=True, exist_ok=True)
+import colorama
 
-veSlozce = set(sorted(primSlozka.glob("*.pdf"))) 
 
 with open("querys.txt", "r", encoding="utf-8") as f:
     urls = f.read().splitlines()
@@ -51,6 +45,7 @@ def getTitle():
     pyautogui.hotkey('ctrl', 'c')  
     pyautogui.hotkey('ctrl', 'w') 
     htmlWebu = pc.paste() 
+    print("\tZiskán html kod.")
     
     pq = PyQuery(htmlWebu)
     tag = pq('title') # or     tag = pq('div.class')
@@ -65,7 +60,7 @@ def FileOccured(veSlozce: any):
         print(f"\t{cestaFile.name}")
         return (True, cestaFile, veSlozce_actual)
     else: 
-        return (False, None)
+        return (False, None, None)
     
 def Rename(cestaFile: Path, titul: str):
     nazevPresunu = re.sub("[:!?*;°/\\\\]","_", titul)
@@ -97,6 +92,7 @@ def userIO():
         pyautogui.hotkey('ctrl', 'w')  
         return 0  #vede ke konci programu              
     elif klavesa == "f9": #PRO ELSEVIER ETC.
+        print("\tStisknuta F9")
         pyautogui.hotkey('f6')
         pyautogui.hotkey('ctrl', 'c')    
         schranka = pc.paste()
@@ -105,16 +101,18 @@ def userIO():
         #TODO: tady to stahování zatím nech být - bude to možná komplikovaný, zajisti jen to přejmenování
         
         name = getTitle()
+        print("\tZiskan titul " + name)
         
         while True:
             newFile = FileOccured(veSlozce = veSlozce)
             
             if newFile[0]:
-                veSlozce = newFile[2]
+                # veSlozce = newFile[2]
+                print("\tNalezen nový soubor: " + newFile[1])
                 Rename(newFile[1], name)
                 break
                     
-        return "continue" # vede k pokračování programu
+        return ("continue", newFile[2] )# vede k pokračování programu
         
     elif klavesa == "f8": #pro další bezejmenná otevřená pdf
         pyautogui.hotkey('f6')
@@ -125,7 +123,7 @@ def userIO():
             downloadOpenPDF()
             predtim = schranka
             
-            return "continue"
+            return ("continue", None) #TODO: nahradit None
         
     elif klavesa == "f6": #pro již stažená (nepohlídané vědecké portály)
         pyautogui.hotkey('ctrl', 'c')    
@@ -145,11 +143,22 @@ def userIO():
 
 
 def main():
+    print("\033[91m" + "Skript byl spuštěn." + "\033[0m")
     while True:
         output = userIO()
-        if output == 0:
+        if output[0] == 0:
             break
+        else:
+            veSlozce = output[1]
     
         
 if __name__ == "__main__":
+    colorama.init()
+
+    primSlozka = Path.cwd()
+    sekSlozka = Path("./downloaded")
+    sekSlozka.mkdir(parents=True, exist_ok=True)
+
+    veSlozce = set(sorted(primSlozka.glob("*.pdf"))) 
+    
     main()
