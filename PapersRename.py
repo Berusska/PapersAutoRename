@@ -23,8 +23,6 @@ import re
 import colorama
 
 
-with open("querys.txt", "r", encoding="utf-8") as f:
-    urls = f.read().splitlines()
 
 def downloadOpenPDF():
     pyautogui.click(0, 200)
@@ -40,7 +38,8 @@ def downloadSciencePDF():
 
 def getTitle():
     pyautogui.hotkey('ctrl', 'u') # pak lze url =  view-source:https://link.springer.com/article/10.1007/s00204-016-1827-3
-    time.sleep(0.5) 
+    time.sleep(1) 
+    pyautogui.click(100, 200)
     pyautogui.hotkey('ctrl', 'a')  
     pyautogui.hotkey('ctrl', 'c')  
     pyautogui.hotkey('ctrl', 'w') 
@@ -48,8 +47,11 @@ def getTitle():
     print("\tZiskán html kod.")
     
     pq = PyQuery(htmlWebu)
+    print("\thtml:" + htmlWebu[0:60])
     tag = pq('title') # or     tag = pq('div.class')
+    print("\ttag:" + str(tag))
     Titul = tag.text()
+    print("\ttitul: " + Titul)
     return Titul
     
 def FileOccured(veSlozce: any):
@@ -93,6 +95,7 @@ def userIO():
         return 0  #vede ke konci programu              
     elif klavesa == "f9": #PRO ELSEVIER ETC.
         print("\tStisknuta F9")
+        pyautogui.click(100, 200)
         pyautogui.hotkey('f6')
         pyautogui.hotkey('ctrl', 'c')    
         schranka = pc.paste()
@@ -101,14 +104,15 @@ def userIO():
         #TODO: tady to stahování zatím nech být - bude to možná komplikovaný, zajisti jen to přejmenování
         
         name = getTitle()
-        print("\tZiskan titul " + name)
+        print("\tZiskan titul ")
+        print(name)
         
         while True:
             newFile = FileOccured(veSlozce = veSlozce)
             
             if newFile[0]:
                 # veSlozce = newFile[2]
-                print("\tNalezen nový soubor: " + newFile[1])
+                print("\tNalezen nový soubor: " + str(newFile[1]))
                 Rename(newFile[1], name)
                 break
                     
@@ -130,6 +134,8 @@ def userIO():
         schranka = pc.paste()
     else: pass #není zmážknuta klávesa, nebo je jiná od definovaných
 
+    
+    #TODO: zajistit průběžný záznam práce do urls.txt
     # nazev = getTitle()
     # web = ...
     # if web in ["link.springer.com", "www.researchgate.net", ...]:
@@ -146,10 +152,13 @@ def main():
     print("\033[91m" + "Skript byl spuštěn." + "\033[0m")
     while True:
         output = userIO()
+        print(output)
         if output[0] == 0:
             break
         else:
             veSlozce = output[1]
+    
+    print("\tVystoupení z while-loopu. Konec programu")
     
         
 if __name__ == "__main__":
@@ -160,5 +169,8 @@ if __name__ == "__main__":
     sekSlozka.mkdir(parents=True, exist_ok=True)
 
     veSlozce = set(sorted(primSlozka.glob("*.pdf"))) 
+    
+    with open("urls.txt", "r", encoding="utf-8") as f:
+        urls = f.read().splitlines()
     
     main()
