@@ -206,3 +206,13 @@ if __name__ == "__main__":
         urls = f.read().splitlines()
     
     main()
+    
+    
+    
+#FIXME: https://pypi.org/project/PySimpleGUI/4.17.0/
+# TODO: sg.InputText() S DEFINOVANOU HODNOTOU
+# https://github.com/PySimpleGUI/PySimpleGUI/issues/966
+
+#https://www.activestate.com/resources/quick-reads/how-to-install-python-packages-using-a-script/# https://stackoverflow.com/questions/74154603/how-to-add-a-field-in-one-text-input-by-clicking-a-button-in-pysimplegui
+
+#https://www.reddit.com/r/learnpython/comments/mosgc5/updating_text_with_pysimplegui/
