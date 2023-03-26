@@ -6,30 +6,59 @@ title Instalace Programu
 cls
 color 2
 
-echo """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-echo "         __,               , _                                      "
-echo "        /  |       _|_  _ /|/ \  _        _,           _            "
-echo "       |   |  |  |  |  / \_|__/ |/ /|/|  / |  /|/|/|  |/            "
-echo "        \_/\_/ \/|_/|_/\_/ | \_/|_/ | |_/\/|_/ | | |_/|_/           "
-echo "        ()  _  o  _        _   _     _,   ,_ _|_ o  _  |\  _        "
-echo "        /\ /   | |/ /|/|  /   |/    / |  /  | |  | /   |/ |/        "
-echo "       /(_)\__/|/|_/ | |_/\__/|_/   \/|_/   |/|_/|/\__/|_/|_/       "
-echo "--------------------------------------------------------------------"
-echo "                                                   by Tomas Spurny  "
-echo """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+echo """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+echo """                                                                                            """
+echo """                     __,               , _                                                  """
+echo """                    /  |       _|_  _ /|/ \  _        _,           _                        """
+echo """                   |   |  |  |  |  / \_|__/ |/ /|/|  / |  /|/|/|  |/                        """
+echo """                    \_/\_/ \/|_/|_/\_/ | \_/|_/ | |_/\/|_/ | | |_/|_/                       """
+echo """                    ()  _  o  _        _   _     _,   ,_ _|_ o  _  |\  _                    """
+echo """                    /\ /   | |/ /|/|  /   |/    / |  /  | |  | /   |/ |/                    """
+echo """                   /(_)\__/|/|_/ | |_/\__/|_/   \/|_/   |/|_/|/\__/|_/|_/                   """
+echo """                                                                                            """
+echo """--------------------------------------------------------------------------------------------"""
+echo """                                                                       by Tomas Spurny      """
+echo """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+echo """                      _                                                          .--.       """
+echo """                    _(_)_                                 wWWWw      _         .'_\/_'.     """
+echo """    @@@@           (_)@(_)     vVVVv       _      @@@@    (___)    _(_)_       '. /\ .'     """
+echo """   @@()@@   wWWWw    (_)\      (___)     _(_)_   @@()@@     Y     (_)@(_)         ||        """
+echo """    @@@@    (___)       `|/      Y      (_)@(_)   @@@@     \|/      (_)\          || /\     """
+echo """     /        Y         \|      \|/      /(_)     \|        |/         |       /\ ||//\     """
+echo """  \ |       \ |/         | /   \ | /    \|/        |/      \|         \|/      /\\||/_/     """
+echo """   \|//     \\|//  /  \\\|//  \\\|///   \|///   \\\|//    \\|//     \\\|//       \||/       """
+echo """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+echo """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 echo.
 echo.
-echo Vitejte u instalace programu. 
-echo    - Prave se zjistuje cesta zdrojoveho kodu programu.
-timeout 1 > nul
+echo Vitejte u instalace programu!
+echo.
+echo Hint: Instalacni soubor by nemel byt umisten ve slozce, ceste ke slozce, v niz je diakritika.
+echo Aktualni cesta je %~dp0
+echo    K pokracovani stisknete jakoukoli klavesu.
+echo.
+pause > nul
+echo Nyni se Vam spusti instalace programovaciho jazyku Python 3.11.2.
+echo     Zaskrknete moznost "Add Python to PATH".
+timeout 2 > nul 
+%~dp0\Source\python-3.11.2-amd64.exe
+echo     K pokracovani stisknete jakoukoli klavesu.
+pause > nul
+echo Aktualne mate Python na ceste:
+where python
+echo     Pokud tomu je tedy Python nainstalovan, stisknete Enter.
+pause > nul
+echo.
+echo Nyni se Vam nainstaluji potrebne python moduly.
+::TODO: pip install
+echo.
+echo Prave se zjistuje cesta zdrojoveho kodu programu.
+timeout 2 > nul
 
 ::Následující najde python skript a uloží jeho cestu; vyhledává i v podsložkách
 for /r ./ %%a in (*) do if "%%~nxa"=="PapersRename.py" set CestaProgramu=%%~dpnxa
 
-
-
 echo    - Aktualni cesta zdrojoveho kodu je:
-timeout 1 > nul
 if defined CestaProgramu (echo          %CestaProgramu%) else (echo      File not found)
 ::https://devblogs.microsoft.com/oldnewthing/20120731-00/?p=7003
 ::https://stackoverflow.com/questions/13876771/find-file-and-return-full-path-using-a-batch-file
@@ -43,6 +72,7 @@ set prikaz=%CestaPythonu% %CestaProgramu%
 
 
 echo echo off >RunProgramTEST.bat
+echo cls >>RunProgramTEST.bat
 echo echo.    >>RunProgramTEST.bat
 echo echo """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" >>RunProgramTEST.bat
 echo echo "         __,               , _                                      " >>RunProgramTEST.bat
@@ -65,20 +95,19 @@ echo echo "    \ |     \ |/       | / \ | /  \|/       |/    \|      \|/       "
 echo echo "     \|//   \\|///  \\\|//\\\|/// \|///  \\\|//  \\|//  \\\|//      " >>RunProgramTEST.bat
 echo echo """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" >>RunProgramTEST.bat
 echo echo """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" >>RunProgramTEST.bat
-echo echo.
+echo echo. >>RunProgramTEST.bat
 echo %prikaz% >> RunProgramTEST.bat 
 ::Nebo lze také ::echo|set /p=%CestaPythonu% %CestaProgramu% > RunProgramTEST.bat 
 echo exit 0 >> RunProgramTEST.bat
 
-echo.
-timeout 1 > nul
-echo    - Soubor  RunProgram.bat byl vytvoren
+timeout 2 > nul
+echo    - Spousteci soubor RunProgram.bat byl vytvoren. Naleznete jej ve zdejsi slozce.
 ::https://stackoverflow.com/questions/2027070/how-to-concatenate-strings-in-a-windows-batch-file
 ::@pause
 echo.
-echo Instalace (pokus o ni) dokoncena. Stiskni jakoukoli klavesu, bys ukoncil instalaci...
+echo Instalace (pokus o ni) dokoncena. Stisknete jakoukoli klavesu, bys ukoncili instalaci...
 pause > nul 
-echo Closing Instalation window.
+echo Zaviram instalacni program...
 timeout 1 > nul
 exit 0
 
