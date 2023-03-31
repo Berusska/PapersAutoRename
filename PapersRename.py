@@ -216,3 +216,8 @@ if __name__ == "__main__":
 #https://www.activestate.com/resources/quick-reads/how-to-install-python-packages-using-a-script/# https://stackoverflow.com/questions/74154603/how-to-add-a-field-in-one-text-input-by-clicking-a-button-in-pysimplegui
 
 #https://www.reddit.com/r/learnpython/comments/mosgc5/updating_text_with_pysimplegui/
+
+
+
+
+#TODO: na začátku nechat uživatel ekliknout na ikonku Zotera v pc; do RunProgram dát příkaz na spuštění Zotera
